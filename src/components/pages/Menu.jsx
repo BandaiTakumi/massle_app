@@ -1,12 +1,27 @@
 import "./Menu.css";
 import { useState, useEffect } from "react";
-import exercisesData from "../../data/exercises.json";
+import { useNavigate } from "react-router-dom";
+import exercisesDataJson from "../../data/exercises.json";
 
 function Menu() {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(() => {
     return localStorage.getItem("selectedCategory") || "胸";
   });
   const [selectedExercises, setSelectedExercises] = useState([]);
+  const [exercisesData, setExercisesData] = useState([]);
+
+  // localStorageからexercisesデータを読み込む（初回はJSONから）
+  useEffect(() => {
+    const storedExercises = localStorage.getItem("exercises");
+    if (storedExercises) {
+      setExercisesData(JSON.parse(storedExercises));
+    } else {
+      // 初回読み込み時はJSONファイルからlocalStorageに保存
+      localStorage.setItem("exercises", JSON.stringify(exercisesDataJson));
+      setExercisesData(exercisesDataJson);
+    }
+  }, []);
 
   const categories = ["胸", "肩", "腕", "脚", "腹筋", "背中"];
 
@@ -14,8 +29,8 @@ function Menu() {
     localStorage.setItem("selectedCategory", selectedCategory);
   }, [selectedCategory]);
 
-  const filteredExercises = exercisesData.filter(
-    (exercise) => exercise.category === selectedCategory
+  const filteredExercises = exercisesData.filter((exercise) =>
+    exercise.category.includes(selectedCategory)
   );
 
   const handleCheckboxChange = (exerciseId) => {
@@ -32,8 +47,7 @@ function Menu() {
   };
 
   const handleAddOriginalMenu = () => {
-    console.log("オリジナルメニュー追加画面へ遷移");
-    // オリジナルメニュー追加画面への遷移処理
+    navigate("/add-menu");
   };
 
   return (

@@ -1,12 +1,12 @@
 [
-  { "id": 1, "name": "ベンチプレス", "category": "胸" },
-  { "id": 2, "name": "スクワット", "category": "脚" },
-  { "id": 3, "name": "デッドリフト", "category": "背中" },
-  { "id": 4, "name": "ショルダープレス", "category": "肩" },
-  { "id": 5, "name": "バーベルカール", "category": "腕" },
-  { "id": 6, "name": "クランチ", "category": "腹筋" },
-  { "id": 7, "name": "アブコースター", "category": "腹筋" },
-  { "id": 8, "name": "アブドミナルクランチ", "category": "腹筋" },
-  { "id": 9, "name": "腹筋ローラー", "category": "腹筋" },
-  { "id": 10, "name": "ロシアンツイスト", "category": "腹筋" }
+  { "id": 1, "name": "ベンチプレス", "category": ["胸"] },
+  { "id": 2, "name": "スクワット", "category": ["脚"] },
+  { "id": 3, "name": "デッドリフト", "category": ["背中"] },
+  { "id": 4, "name": "ショルダープレス", "category": ["肩"] },
+  { "id": 5, "name": "バーベルカール", "category": ["腕"] },
+  { "id": 6, "name": "クランチ", "category": ["腹筋"] },
+  { "id": 7, "name": "アブコースター", "category": ["腹筋", "腕"] },
+  { "id": 8, "name": "アブドミナルクランチ", "category": ["腹筋"] },
+  { "id": 9, "name": "腹筋ローラー", "category": ["腹筋"] },
+  { "id": 10, "name": "ロシアンツイスト", "category": ["腹筋"] }
 ]

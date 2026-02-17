@@ -1,0 +1,196 @@
+.add-menu-page {
+  width: 100%;
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 60px);
+}
+
+.add-menu-page h2 {
+  margin: 0;
+  color: #28a745;
+  font-size: 1.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex-shrink: 0;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.menu-name-input {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+.menu-name-input:focus {
+  outline: none;
+  border-color: #28a745;
+}
+
+.category-selection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.category-select-button {
+  padding: 0.8rem;
+  border: 2px solid #28a745;
+  background-color: #fff;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #28a745;
+}
+
+.category-select-button:hover {
+  background-color: #f0fff4;
+}
+
+.category-select-button.selected {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.note-section {
+  margin-top: auto;
+  padding: 1rem;
+  background-color: #fff9e6;
+  border-left: 4px solid #ffc107;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.note-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.register-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  flex-shrink: 0;
+  margin-bottom: 2rem;
+}
+
+.register-button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.register-button:active {
+  transform: translateY(0);
+}
+
+/* スマホ対応（768px以下） */
+@media (max-width: 768px) {
+  .add-menu-page {
+    padding: 0.8rem;
+    gap: 1.2rem;
+  }
+
+  .add-menu-page h2 {
+    font-size: 1.3rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .menu-name-input {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  .category-selection {
+    gap: 0.5rem;
+  }
+
+  .category-select-button {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .note-text {
+    font-size: 0.8rem;
+  }
+
+  .register-button {
+    padding: 0.9rem;
+    font-size: 1rem;
+  }
+}
+
+/* 小型スマホ対応（480px以下） */
+@media (max-width: 480px) {
+  .add-menu-page {
+    padding: 0.6rem;
+    gap: 1rem;
+  }
+
+  .add-menu-page h2 {
+    font-size: 1.2rem;
+  }
+
+  .form-label {
+    font-size: 0.85rem;
+  }
+
+  .menu-name-input {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .category-selection {
+    gap: 0.4rem;
+  }
+
+  .category-select-button {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .note-section {
+    padding: 0.8rem;
+  }
+
+  .note-text {
+    font-size: 0.75rem;
+  }
+
+  .register-button {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+}
