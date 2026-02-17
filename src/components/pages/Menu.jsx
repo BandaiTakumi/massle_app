@@ -50,6 +50,19 @@ function Menu() {
     navigate("/add-menu");
   };
 
+  const handleDelete = (exerciseId, exerciseName) => {
+    const confirmed = window.confirm(`「${exerciseName}」を削除しますか？`);
+    if (confirmed) {
+      const updatedExercises = exercisesData.filter(
+        (exercise) => exercise.id !== exerciseId
+      );
+      setExercisesData(updatedExercises);
+      localStorage.setItem("exercises", JSON.stringify(updatedExercises));
+      // 選択リストからも削除
+      setSelectedExercises((prev) => prev.filter((id) => id !== exerciseId));
+    }
+  };
+
   return (
     <div className="menu-page">
       <div className="category-buttons">
@@ -69,6 +82,13 @@ function Menu() {
       <div className="exercise-list">
         {filteredExercises.map((exercise) => (
           <div key={exercise.id} className="exercise-item">
+            <button
+              className="delete-button"
+              onClick={() => handleDelete(exercise.id, exercise.name)}
+              title="削除"
+            >
+              削除
+            </button>
             <span className="exercise-name">{exercise.name}</span>
             <input
               type="checkbox"
