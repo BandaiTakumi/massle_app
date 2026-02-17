@@ -1,0 +1,9 @@
+.weight-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.weight-page h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}

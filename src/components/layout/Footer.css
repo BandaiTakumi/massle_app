@@ -1,0 +1,67 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  border-top: 1px solid #e0e0e0;
+  padding: 0.3rem 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.footer-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.3rem 0.8rem;
+  text-decoration: none;
+  color: #666;
+  transition: color 0.2s;
+  font-size: 0.75rem;
+}
+
+.footer-button span:first-child {
+  font-size: 1.2rem;
+}
+
+.footer-button:hover {
+  color: #333;
+}
+
+.footer-button.active {
+  color: #007bff;
+  font-weight: 600;
+}
+
+/* スマホ対応（768px以下） */
+@media (max-width: 768px) {
+  .footer {
+    padding: 0.2rem 0;
+  }
+
+  .footer-button {
+    gap: 0.05rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .footer-button span:first-child {
+    font-size: 1.1rem;
+  }
+}
+
+/* 小型スマホ対応（480px以下） */
+@media (max-width: 480px) {
+  .footer-button {
+    padding: 0.2rem 0.3rem;
+    font-size: 0.65rem;
+  }
+
+  .footer-button span:first-child {
+    font-size: 1rem;
+  }
+}
