@@ -5,6 +5,7 @@ import Calender from "./components/pages/Calender";
 import Menu from "./components/pages/Menu";
 import Weight from "./components/pages/Weight";
 import AddMenu from "./components/pages/AddMenu";
+import Training from "./components/pages/Training";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Menu />} />
           <Route path="/wight" element={<Weight />} />
           <Route path="/add-menu" element={<AddMenu />} />
+          <Route path="/training" element={<Training />} />
         </Routes>
       </Layout>
     </Router>

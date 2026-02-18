@@ -8,7 +8,10 @@ function Menu() {
   const [selectedCategory, setSelectedCategory] = useState(() => {
     return localStorage.getItem("selectedCategory") || "胸";
   });
-  const [selectedExercises, setSelectedExercises] = useState([]);
+  const [selectedExercises, setSelectedExercises] = useState(() => {
+    const stored = localStorage.getItem("selectedExercises");
+    return stored ? JSON.parse(stored) : [];
+  });
   const [exercisesData, setExercisesData] = useState([]);
 
   // localStorageからexercisesデータを読み込む（初回はJSONから）
@@ -29,6 +32,10 @@ function Menu() {
     localStorage.setItem("selectedCategory", selectedCategory);
   }, [selectedCategory]);
 
+  useEffect(() => {
+    localStorage.setItem("selectedExercises", JSON.stringify(selectedExercises));
+  }, [selectedExercises]);
+
   const filteredExercises = exercisesData.filter((exercise) =>
     exercise.category.includes(selectedCategory)
   );
@@ -43,7 +50,24 @@ function Menu() {
 
   const handleAddClick = () => {
     console.log("選択されたトレーニング:", selectedExercises);
-    // ここに追加処理を実装（トレーニングページ作成）
+    
+    // 選択された種目の詳細データを取得
+    const selectedExercisesData = exercisesData.filter((exercise) =>
+      selectedExercises.includes(exercise.id)
+    );
+    
+    // トレーニングデータをlocalStorageに保存
+    const trainingData = {
+      exercises: selectedExercisesData,
+      createdAt: new Date().toISOString(),
+    };
+    localStorage.setItem('currentTraining', JSON.stringify(trainingData));
+    
+    // トレーニングボタンを表示するフラグを設定
+    localStorage.setItem('hasTraining', 'true');
+    
+    // トレーニングページに遷移
+    navigate('/training');
   };
 
   const handleAddOriginalMenu = () => {
@@ -60,6 +84,23 @@ function Menu() {
       localStorage.setItem("exercises", JSON.stringify(updatedExercises));
       // 選択リストからも削除
       setSelectedExercises((prev) => prev.filter((id) => id !== exerciseId));
+      
+      // トレーニングデータからも削除
+      const currentTraining = localStorage.getItem('currentTraining');
+      if (currentTraining) {
+        const trainingData = JSON.parse(currentTraining);
+        const updatedTrainingExercises = trainingData.exercises.filter(
+          (exercise) => exercise.id !== exerciseId
+        );
+        if (updatedTrainingExercises.length > 0) {
+          trainingData.exercises = updatedTrainingExercises;
+          localStorage.setItem('currentTraining', JSON.stringify(trainingData));
+        } else {
+          // トレーニング種目が全て削除された場合
+          localStorage.removeItem('currentTraining');
+          localStorage.removeItem('hasTraining');
+        }
+      }
     }
   };
 
@@ -81,10 +122,17 @@ function Menu() {
 
       <div className="exercise-list">
         {filteredExercises.map((exercise) => (
-          <div key={exercise.id} className="exercise-item">
+          <div 
+            key={exercise.id} 
+            className="exercise-item"
+            onClick={() => handleCheckboxChange(exercise.id)}
+          >
             <button
               className="delete-button"
-              onClick={() => handleDelete(exercise.id, exercise.name)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(exercise.id, exercise.name);
+              }}
               title="削除"
             >
             {/* ごみ箱のsvgアイコン */}
