@@ -101,16 +101,40 @@ function Training() {
     const exercise = exercises.find(ex => ex.id === exerciseId)
     const confirmed = window.confirm(`「${exercise.name}」を削除しますか？`)
     if (confirmed) {
-      setExercises(prev => prev.filter(ex => ex.id !== exerciseId))
+      const updatedExercises = exercises.filter(ex => ex.id !== exerciseId)
+      setExercises(updatedExercises)
+      
+      // exerciseRecordsからも削除
       setExerciseRecords(prev => {
         const updated = { ...prev }
         delete updated[exerciseId]
         return updated
       })
+      
+      // localStorageのcurrentTrainingを更新
+      const currentTraining = localStorage.getItem('currentTraining')
+      if (currentTraining) {
+        const trainingData = JSON.parse(currentTraining)
+        trainingData.exercises = updatedExercises
+        localStorage.setItem('currentTraining', JSON.stringify(trainingData))
+      }
+      
+      // currentTrainingRecordsも更新
+      const savedRecords = localStorage.getItem('currentTrainingRecords')
+      if (savedRecords) {
+        const records = JSON.parse(savedRecords)
+        delete records[exerciseId]
+        localStorage.setItem('currentTrainingRecords', JSON.stringify(records))
+      }
+      
+      // メニュー登録画面の選択状態からも削除
+      const selectedExercises = JSON.parse(localStorage.getItem('selectedExercises') || '[]')
+      const updatedSelection = selectedExercises.filter(id => id !== exerciseId)
+      localStorage.setItem('selectedExercises', JSON.stringify(updatedSelection))
     }
   }
 
-  // 種目を完了
+  // 種目を完了（確認なしで削除）
   const completeExercise = (exerciseId) => {
     const exercise = exercises.find(ex => ex.id === exerciseId)
     const sets = exerciseRecords[exerciseId] || []
@@ -127,8 +151,36 @@ function Training() {
     completed.push(completedData)
     localStorage.setItem('completedExercises', JSON.stringify(completed))
     
-    // ページから削除
-    removeExercise(exerciseId)
+    // ページから削除（確認なし）
+    const updatedExercises = exercises.filter(ex => ex.id !== exerciseId)
+    setExercises(updatedExercises)
+    
+    setExerciseRecords(prev => {
+      const updated = { ...prev }
+      delete updated[exerciseId]
+      return updated
+    })
+    
+    // localStorageのcurrentTrainingを更新
+    const currentTraining = localStorage.getItem('currentTraining')
+    if (currentTraining) {
+      const trainingData = JSON.parse(currentTraining)
+      trainingData.exercises = updatedExercises
+      localStorage.setItem('currentTraining', JSON.stringify(trainingData))
+    }
+    
+    // currentTrainingRecordsも更新
+    const savedRecords = localStorage.getItem('currentTrainingRecords')
+    if (savedRecords) {
+      const records = JSON.parse(savedRecords)
+      delete records[exerciseId]
+      localStorage.setItem('currentTrainingRecords', JSON.stringify(records))
+    }
+    
+    // メニュー登録画面の選択状態からも削除
+    const selectedExercises = JSON.parse(localStorage.getItem('selectedExercises') || '[]')
+    const updatedSelection = selectedExercises.filter(id => id !== exerciseId)
+    localStorage.setItem('selectedExercises', JSON.stringify(updatedSelection))
   }
 
   // すべてのトレーニングを完了

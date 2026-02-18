@@ -51,10 +51,10 @@ function Menu() {
   const handleAddClick = () => {
     console.log("選択されたトレーニング:", selectedExercises);
     
-    // 選択された種目の詳細データを取得
-    const selectedExercisesData = exercisesData.filter((exercise) =>
-      selectedExercises.includes(exercise.id)
-    );
+    // 選択された順番でデータを取得（チェックを入れた順）
+    const selectedExercisesData = selectedExercises.map(id => 
+      exercisesData.find(exercise => exercise.id === id)
+    ).filter(Boolean); // nullやundefinedを除外
     
     // トレーニングデータをlocalStorageに保存
     const trainingData = {
@@ -98,8 +98,17 @@ function Menu() {
         } else {
           // トレーニング種目が全て削除された場合
           localStorage.removeItem('currentTraining');
+          localStorage.removeItem('currentTrainingRecords');
           localStorage.removeItem('hasTraining');
         }
+      }
+      
+      // currentTrainingRecordsからも削除
+      const currentRecords = localStorage.getItem('currentTrainingRecords');
+      if (currentRecords) {
+        const records = JSON.parse(currentRecords);
+        delete records[exerciseId];
+        localStorage.setItem('currentTrainingRecords', JSON.stringify(records));
       }
     }
   };
