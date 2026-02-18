@@ -16,18 +16,22 @@ function Training() {
       
       // 保存されている入力データを復元
       const savedRecords = localStorage.getItem('currentTrainingRecords')
+      let records = {}
+      
       if (savedRecords) {
-        setExerciseRecords(JSON.parse(savedRecords))
-      } else {
-        // 初回のみ初期セットを作成
-        const initialRecords = {}
-        trainingData.exercises.forEach(exercise => {
-          initialRecords[exercise.id] = [
+        records = JSON.parse(savedRecords)
+      }
+      
+      // すべての種目に対して初期セットを確保
+      trainingData.exercises.forEach(exercise => {
+        if (!records[exercise.id] || records[exercise.id].length === 0) {
+          records[exercise.id] = [
             { setNumber: 1, weight: '', reps: '' }
           ]
-        })
-        setExerciseRecords(initialRecords)
-      }
+        }
+      })
+      
+      setExerciseRecords(records)
     }
   }, [])
 
