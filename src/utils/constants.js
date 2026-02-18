@@ -8,6 +8,8 @@ export const STORAGE_KEYS = {
   TRAINING_HISTORY: 'trainingHistory',
   COMPLETED_EXERCISES: 'completedExercises',
   HAS_TRAINING: 'hasTraining',
+  USER_PROFILE: 'userProfile',
+  WEIGHT_HISTORY: 'weightHistory',
 }
 
 // Color Theme

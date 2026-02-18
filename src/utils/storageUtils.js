@@ -230,3 +230,49 @@ export const clearTrainingSession = () => {
   clearCompletedExercises()
   setSelectedExercises([])
 }
+
+// ========================================
+// 体重管理関連
+// ========================================
+
+/**
+ * ユーザープロフィール（年齢・身長）を取得
+ * @returns {{ age: number, height: number } | null}
+ */
+export const getUserProfile = () => {
+  return getStorageItem(STORAGE_KEYS.USER_PROFILE, null)
+}
+
+/**
+ * ユーザープロフィール（年齢・身長）を保存
+ * @param {{ age: number, height: number }} profile
+ */
+export const setUserProfile = (profile) => {
+  setStorageItem(STORAGE_KEYS.USER_PROFILE, profile)
+}
+
+/**
+ * 体重履歴を取得
+ * @returns {Array<{ date: string, weight: number, bmi: number, age: number, height: number }>}
+ */
+export const getWeightHistory = () => {
+  return getStorageItem(STORAGE_KEYS.WEIGHT_HISTORY, [])
+}
+
+/**
+ * 体重履歴を保存
+ * @param {Array} history
+ */
+export const setWeightHistory = (history) => {
+  setStorageItem(STORAGE_KEYS.WEIGHT_HISTORY, history)
+}
+
+/**
+ * 体重記録を追加
+ * @param {{ date: string, weight: number, bmi: number, age: number, height: number }} record
+ */
+export const addWeightRecord = (record) => {
+  const history = getWeightHistory()
+  history.push(record)
+  setWeightHistory(history)
+}
