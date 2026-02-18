@@ -241,6 +241,15 @@
 
   .training-page h1 {
     font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .training-exercises {
+    padding-right: 0.25rem;
+  }
+
+  .training-exercise-block {
+    padding: 0.75rem;
   }
 
   .exercise-name {
@@ -248,17 +257,24 @@
   }
 
   .sets-header {
-    font-size: 0.8rem;
-    grid-template-columns: 50px 1fr 1fr 28px;
+    font-size: 0.75rem;
+    grid-template-columns: 40px 1fr 1fr 24px;
+    gap: 0.25rem;
+    padding: 0.25rem;
   }
 
   .set-row {
-    grid-template-columns: 50px 1fr 1fr 28px;
+    grid-template-columns: 40px 1fr 1fr 24px;
+    gap: 0.25rem;
+  }
+
+  .set-number {
+    font-size: 0.9rem;
   }
 
   .weight-input,
   .reps-input {
-    padding: 0.6rem;
+    padding: 0.5rem 0.25rem;
     font-size: 0.9rem;
   }
 
@@ -268,9 +284,26 @@
     font-size: 1rem;
   }
 
+  .remove-set-button {
+    width: 20px;
+    height: 20px;
+    font-size: 1rem;
+  }
+
   .complete-exercise-button {
     padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
+  }
+
+  .delete-exercise-button {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .delete-exercise-button svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
