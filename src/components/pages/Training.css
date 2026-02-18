@@ -2,10 +2,13 @@
   width: 100%;
   margin: 0;
   padding: 1rem;
-  height: calc(100vh - 50px);
+  padding-bottom: calc(50px + 1rem);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #ccc;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .training-page h1 {
