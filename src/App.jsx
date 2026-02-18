@@ -6,6 +6,7 @@ import Menu from "./components/pages/Menu";
 import Weight from "./components/pages/Weight";
 import AddMenu from "./components/pages/AddMenu";
 import Training from "./components/pages/Training";
+import TrainingComplete from "./components/pages/TrainingComplete";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/wight" element={<Weight />} />
           <Route path="/add-menu" element={<AddMenu />} />
           <Route path="/training" element={<Training />} />
+          <Route path="/training-complete" element={<TrainingComplete />} />
         </Routes>
       </Layout>
     </Router>
