@@ -190,7 +190,7 @@ function Calender() {
               ))}
             </div>
           ) : (
-            <p className="no-training-message">本日の完了トレーニングはありません</p>
+            <p className="no-training-message">完了トレーニングはありません</p>
           )
         )}
       </div>

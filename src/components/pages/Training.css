@@ -243,6 +243,20 @@
   transform: translateY(0);
 }
 
+.complete-all-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.complete-all-button:disabled:hover {
+  background-color: #ccc;
+  transform: none;
+  box-shadow: none;
+}
+
 /* スマホ対応 */
 @media (max-width: 768px) {
   .training-page {

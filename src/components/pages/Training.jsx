@@ -202,7 +202,12 @@ function Training() {
   // 種目の完了ボタン有効判定
   const canCompleteExercise = (exerciseId) => {
     const sets = exerciseRecords[exerciseId] || []
-    return sets.some(set => set.weight && set.reps)
+    return sets.length > 0 && sets.every(set => set.weight && set.reps)
+  }
+
+  // すべてのトレーニング完了ボタン有効判定
+  const canCompleteAllTraining = () => {
+    return exercises.every(exercise => canCompleteExercise(exercise.id))
   }
 
   // すべてのトレーニングを完了
@@ -236,8 +241,8 @@ function Training() {
     // トレーニングデータをクリア
     clearTrainingSession()
     
-    // 完了ページに遷移
-    navigate('/training-complete')
+    // カレンダー画面に遷移
+    navigate('/calender')
   }
 
   if (exercises.length === 0) {
@@ -337,7 +342,11 @@ function Training() {
         ))}
       </div>
 
-      <button className="complete-all-button" onClick={completeAllTraining}>
+      <button 
+        className="complete-all-button" 
+        onClick={completeAllTraining}
+        disabled={!canCompleteAllTraining()}
+      >
         すべてのトレーニングを完了
       </button>
     </div>
