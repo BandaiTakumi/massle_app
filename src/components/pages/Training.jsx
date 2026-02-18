@@ -14,16 +14,29 @@ function Training() {
       const trainingData = JSON.parse(savedTraining)
       setExercises(trainingData.exercises)
       
-      // 各種目の初期セットを作成
-      const initialRecords = {}
-      trainingData.exercises.forEach(exercise => {
-        initialRecords[exercise.id] = [
-          { setNumber: 1, weight: '', reps: '' }
-        ]
-      })
-      setExerciseRecords(initialRecords)
+      // 保存されている入力データを復元
+      const savedRecords = localStorage.getItem('currentTrainingRecords')
+      if (savedRecords) {
+        setExerciseRecords(JSON.parse(savedRecords))
+      } else {
+        // 初回のみ初期セットを作成
+        const initialRecords = {}
+        trainingData.exercises.forEach(exercise => {
+          initialRecords[exercise.id] = [
+            { setNumber: 1, weight: '', reps: '' }
+          ]
+        })
+        setExerciseRecords(initialRecords)
+      }
     }
   }, [])
+
+  // exerciseRecordsが変更されたらlocalStorageに保存
+  useEffect(() => {
+    if (Object.keys(exerciseRecords).length > 0) {
+      localStorage.setItem('currentTrainingRecords', JSON.stringify(exerciseRecords))
+    }
+  }, [exerciseRecords])
 
   // 前回の記録を取得
   const getPreviousRecord = (exerciseId, setNumber) => {
@@ -152,6 +165,7 @@ function Training() {
     
     // トレーニングデータをクリア
     localStorage.removeItem('currentTraining')
+    localStorage.removeItem('currentTrainingRecords')
     localStorage.removeItem('hasTraining')
     localStorage.removeItem('completedExercises')
     
