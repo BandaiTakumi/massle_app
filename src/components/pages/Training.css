@@ -276,6 +276,8 @@
   .reps-input {
     padding: 0.5rem 0.25rem;
     font-size: 0.9rem;
+    min-width: 0;
+    border-width: 1px;
   }
 
   .add-set-button {
