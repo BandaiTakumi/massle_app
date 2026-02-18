@@ -2,13 +2,13 @@ import "./AddMenu.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import exercisesData from "../../data/exercises.json";
+import { DEFAULT_CATEGORIES } from "../../utils/constants";
+import { getExercises, setExercises } from "../../utils/storageUtils";
 
 function AddMenu() {
   const navigate = useNavigate();
   const [menuName, setMenuName] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
-
-  const categories = ["胸", "肩", "腕", "脚", "腹筋", "背中"];
 
   const handleCategoryToggle = (category) => {
     setSelectedCategories((prev) =>
@@ -25,12 +25,11 @@ function AddMenu() {
     }
 
     // localStorageから既存のデータを取得
-    const storedExercises = JSON.parse(
-      localStorage.getItem("exercises") || JSON.stringify(exercisesData)
-    );
+    const storedExercises = getExercises();
+    const exercisesToUse = storedExercises.length > 0 ? storedExercises : exercisesData;
 
     // 新しいIDを生成（既存の最大ID + 1）
-    const newId = Math.max(...storedExercises.map((ex) => ex.id), 0) + 1;
+    const newId = Math.max(...exercisesToUse.map((ex) => ex.id), 0) + 1;
 
     const newExercise = {
       id: newId,
@@ -39,8 +38,8 @@ function AddMenu() {
     };
 
     // 新しいメニューを追加してlocalStorageに保存
-    const updatedExercises = [...storedExercises, newExercise];
-    localStorage.setItem("exercises", JSON.stringify(updatedExercises));
+    const updatedExercises = [...exercisesToUse, newExercise];
+    setExercises(updatedExercises);
 
     console.log("新しいメニューを登録:", newExercise);
     alert(`「${menuName}」を登録しました`);
@@ -67,7 +66,7 @@ function AddMenu() {
       <div className="form-section">
         <label className="form-label">部位選択（複数選択可）</label>
         <div className="category-selection">
-          {categories.map((category) => (
+          {DEFAULT_CATEGORIES.map((category) => (
             <button
               key={category}
               className={`category-select-button ${selectedCategories.includes(category) ? "selected" : ""}`}

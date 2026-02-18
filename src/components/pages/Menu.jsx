@@ -2,38 +2,53 @@ import "./Menu.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import exercisesDataJson from "../../data/exercises.json";
+import { DEFAULT_CATEGORIES } from "../../utils/constants";
+import { TrashIcon } from "../common/Icons";
+import {
+  getExercises,
+  setExercises,
+  getSelectedCategory,
+  setSelectedCategory as saveSelectedCategory,
+  getSelectedExercises,
+  setSelectedExercises as saveSelectedExercises,
+  setCurrentTraining,
+  clearCurrentTraining,
+  clearCurrentTrainingRecords,
+  clearHasTraining,
+  setHasTraining,
+  getCurrentTraining,
+  getCurrentTrainingRecords,
+  setCurrentTrainingRecords
+} from "../../utils/storageUtils";
 
 function Menu() {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(() => {
-    return localStorage.getItem("selectedCategory") || "胸";
+    return getSelectedCategory();
   });
   const [selectedExercises, setSelectedExercises] = useState(() => {
-    const stored = localStorage.getItem("selectedExercises");
-    return stored ? JSON.parse(stored) : [];
+    return getSelectedExercises();
   });
   const [exercisesData, setExercisesData] = useState([]);
 
   // localStorageからexercisesデータを読み込む（初回はJSONから）
   useEffect(() => {
-    const storedExercises = localStorage.getItem("exercises");
-    if (storedExercises) {
-      setExercisesData(JSON.parse(storedExercises));
+    const storedExercises = getExercises();
+    if (storedExercises.length > 0) {
+      setExercisesData(storedExercises);
     } else {
       // 初回読み込み時はJSONファイルからlocalStorageに保存
-      localStorage.setItem("exercises", JSON.stringify(exercisesDataJson));
+      setExercises(exercisesDataJson);
       setExercisesData(exercisesDataJson);
     }
   }, []);
 
-  const categories = ["胸", "肩", "腕", "脚", "腹筋", "背中"];
-
   useEffect(() => {
-    localStorage.setItem("selectedCategory", selectedCategory);
+    saveSelectedCategory(selectedCategory);
   }, [selectedCategory]);
 
   useEffect(() => {
-    localStorage.setItem("selectedExercises", JSON.stringify(selectedExercises));
+    saveSelectedExercises(selectedExercises);
   }, [selectedExercises]);
 
   const filteredExercises = exercisesData.filter((exercise) =>
@@ -61,10 +76,10 @@ function Menu() {
       exercises: selectedExercisesData,
       createdAt: new Date().toISOString(),
     };
-    localStorage.setItem('currentTraining', JSON.stringify(trainingData));
+    setCurrentTraining(trainingData);
     
     // トレーニングボタンを表示するフラグを設定
-    localStorage.setItem('hasTraining', 'true');
+    setHasTraining(true);
     
     // トレーニングページに遷移
     navigate('/training');
@@ -81,34 +96,32 @@ function Menu() {
         (exercise) => exercise.id !== exerciseId
       );
       setExercisesData(updatedExercises);
-      localStorage.setItem("exercises", JSON.stringify(updatedExercises));
+      setExercises(updatedExercises);
       // 選択リストからも削除
       setSelectedExercises((prev) => prev.filter((id) => id !== exerciseId));
       
       // トレーニングデータからも削除
-      const currentTraining = localStorage.getItem('currentTraining');
+      const currentTraining = getCurrentTraining();
       if (currentTraining) {
-        const trainingData = JSON.parse(currentTraining);
-        const updatedTrainingExercises = trainingData.exercises.filter(
+        const updatedTrainingExercises = currentTraining.exercises.filter(
           (exercise) => exercise.id !== exerciseId
         );
         if (updatedTrainingExercises.length > 0) {
-          trainingData.exercises = updatedTrainingExercises;
-          localStorage.setItem('currentTraining', JSON.stringify(trainingData));
+          currentTraining.exercises = updatedTrainingExercises;
+          setCurrentTraining(currentTraining);
         } else {
           // トレーニング種目が全て削除された場合
-          localStorage.removeItem('currentTraining');
-          localStorage.removeItem('currentTrainingRecords');
-          localStorage.removeItem('hasTraining');
+          clearCurrentTraining();
+          clearCurrentTrainingRecords();
+          clearHasTraining();
         }
       }
       
       // currentTrainingRecordsからも削除
-      const currentRecords = localStorage.getItem('currentTrainingRecords');
-      if (currentRecords) {
-        const records = JSON.parse(currentRecords);
-        delete records[exerciseId];
-        localStorage.setItem('currentTrainingRecords', JSON.stringify(records));
+      const currentRecords = getCurrentTrainingRecords();
+      if (currentRecords && currentRecords[exerciseId]) {
+        delete currentRecords[exerciseId];
+        setCurrentTrainingRecords(currentRecords);
       }
     }
   };
@@ -116,7 +129,7 @@ function Menu() {
   return (
     <div className="menu-page">
       <div className="category-buttons">
-        {categories.map((category) => (
+        {DEFAULT_CATEGORIES.map((category) => (
           <button
             key={category}
             className={`category-button ${selectedCategory === category ? "active" : ""}`}
@@ -144,14 +157,7 @@ function Menu() {
               }}
               title="削除"
             >
-            {/* ごみ箱のsvgアイコン */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                <line x1="10" y1="11" x2="10" y2="17"></line>
-                <line x1="14" y1="11" x2="14" y2="17"></line>
-              </svg>
-              
+              <TrashIcon width={16} height={16} />
             </button>
             <span className="exercise-name">{exercise.name}</span>
             <input

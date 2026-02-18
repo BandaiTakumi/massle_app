@@ -105,9 +105,16 @@
   transition: all 0.2s;
 }
 
-.complete-exercise-button:hover {
+.complete-exercise-button:hover:not(:disabled) {
   background-color: #218838;
   transform: scale(1.05);
+}
+
+.complete-exercise-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  border: 1px solid #999;
 }
 
 .sets-container {

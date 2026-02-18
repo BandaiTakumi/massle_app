@@ -1,6 +1,19 @@
 import './Training.css'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { TrashIcon } from '../common/Icons'
+import {
+  getCurrentTraining,
+  setCurrentTraining,
+  getCurrentTrainingRecords,
+  setCurrentTrainingRecords,
+  getTrainingHistory,
+  addTrainingSession,
+  addCompletedExercise,
+  clearTrainingSession,
+  getSelectedExercises,
+  setSelectedExercises as saveSelectedExercises
+} from '../../utils/storageUtils'
 
 function Training() {
   const navigate = useNavigate()
@@ -9,21 +22,15 @@ function Training() {
 
   useEffect(() => {
     // localStorageから選択されたトレーニングデータを取得
-    const savedTraining = localStorage.getItem('currentTraining')
+    const savedTraining = getCurrentTraining()
     if (savedTraining) {
-      const trainingData = JSON.parse(savedTraining)
-      setExercises(trainingData.exercises)
+      setExercises(savedTraining.exercises)
       
       // 保存されている入力データを復元
-      const savedRecords = localStorage.getItem('currentTrainingRecords')
-      let records = {}
-      
-      if (savedRecords) {
-        records = JSON.parse(savedRecords)
-      }
+      let records = getCurrentTrainingRecords()
       
       // すべての種目に対して初期セットを確保
-      trainingData.exercises.forEach(exercise => {
+      savedTraining.exercises.forEach(exercise => {
         if (!records[exercise.id] || records[exercise.id].length === 0) {
           records[exercise.id] = [
             { setNumber: 1, weight: '', reps: '' }
@@ -38,13 +45,13 @@ function Training() {
   // exerciseRecordsが変更されたらlocalStorageに保存
   useEffect(() => {
     if (Object.keys(exerciseRecords).length > 0) {
-      localStorage.setItem('currentTrainingRecords', JSON.stringify(exerciseRecords))
+      setCurrentTrainingRecords(exerciseRecords)
     }
   }, [exerciseRecords])
 
   // 前回の記録を取得
   const getPreviousRecord = (exerciseId, setNumber) => {
-    const history = JSON.parse(localStorage.getItem('trainingHistory') || '[]')
+    const history = getTrainingHistory()
     const previousSession = history.find(session => 
       session.exercises.some(ex => ex.id === exerciseId)
     )
@@ -116,25 +123,23 @@ function Training() {
       })
       
       // localStorageのcurrentTrainingを更新
-      const currentTraining = localStorage.getItem('currentTraining')
+      const currentTraining = getCurrentTraining()
       if (currentTraining) {
-        const trainingData = JSON.parse(currentTraining)
-        trainingData.exercises = updatedExercises
-        localStorage.setItem('currentTraining', JSON.stringify(trainingData))
+        currentTraining.exercises = updatedExercises
+        setCurrentTraining(currentTraining)
       }
       
       // currentTrainingRecordsも更新
-      const savedRecords = localStorage.getItem('currentTrainingRecords')
-      if (savedRecords) {
-        const records = JSON.parse(savedRecords)
+      const records = getCurrentTrainingRecords()
+      if (records[exerciseId]) {
         delete records[exerciseId]
-        localStorage.setItem('currentTrainingRecords', JSON.stringify(records))
+        setCurrentTrainingRecords(records)
       }
       
       // メニュー登録画面の選択状態からも削除
-      const selectedExercises = JSON.parse(localStorage.getItem('selectedExercises') || '[]')
+      const selectedExercises = getSelectedExercises()
       const updatedSelection = selectedExercises.filter(id => id !== exerciseId)
-      localStorage.setItem('selectedExercises', JSON.stringify(updatedSelection))
+      saveSelectedExercises(updatedSelection)
     }
   }
 
@@ -151,9 +156,18 @@ function Training() {
       completedAt: new Date().toISOString()
     }
     
-    const completed = JSON.parse(localStorage.getItem('completedExercises') || '[]')
-    completed.push(completedData)
-    localStorage.setItem('completedExercises', JSON.stringify(completed))
+    addCompletedExercise(completedData)
+    
+    // トレーニング履歴にも保存（カレンダー表示用）
+    const sessionData = {
+      date: new Date().toISOString(),
+      exercises: [{
+        id: exerciseId,
+        name: exercise.name,
+        sets: sets.filter(set => set.weight || set.reps)
+      }]
+    }
+    addTrainingSession(sessionData)
     
     // ページから削除（確認なし）
     const updatedExercises = exercises.filter(ex => ex.id !== exerciseId)
@@ -166,25 +180,29 @@ function Training() {
     })
     
     // localStorageのcurrentTrainingを更新
-    const currentTraining = localStorage.getItem('currentTraining')
+    const currentTraining = getCurrentTraining()
     if (currentTraining) {
-      const trainingData = JSON.parse(currentTraining)
-      trainingData.exercises = updatedExercises
-      localStorage.setItem('currentTraining', JSON.stringify(trainingData))
+      currentTraining.exercises = updatedExercises
+      setCurrentTraining(currentTraining)
     }
     
     // currentTrainingRecordsも更新
-    const savedRecords = localStorage.getItem('currentTrainingRecords')
-    if (savedRecords) {
-      const records = JSON.parse(savedRecords)
+    const records = getCurrentTrainingRecords()
+    if (records[exerciseId]) {
       delete records[exerciseId]
-      localStorage.setItem('currentTrainingRecords', JSON.stringify(records))
+      setCurrentTrainingRecords(records)
     }
     
     // メニュー登録画面の選択状態からも削除
-    const selectedExercises = JSON.parse(localStorage.getItem('selectedExercises') || '[]')
+    const selectedExercises = getSelectedExercises()
     const updatedSelection = selectedExercises.filter(id => id !== exerciseId)
-    localStorage.setItem('selectedExercises', JSON.stringify(updatedSelection))
+    saveSelectedExercises(updatedSelection)
+  }
+
+  // 種目の完了ボタン有効判定
+  const canCompleteExercise = (exerciseId) => {
+    const sets = exerciseRecords[exerciseId] || []
+    return sets.some(set => set.weight && set.reps)
   }
 
   // すべてのトレーニングを完了
@@ -200,14 +218,11 @@ function Training() {
           completedAt: new Date().toISOString()
         }
         
-        const completed = JSON.parse(localStorage.getItem('completedExercises') || '[]')
-        completed.push(completedData)
-        localStorage.setItem('completedExercises', JSON.stringify(completed))
+        addCompletedExercise(completedData)
       }
     })
     
     // トレーニング履歴に保存
-    const history = JSON.parse(localStorage.getItem('trainingHistory') || '[]')
     const sessionData = {
       date: new Date().toISOString(),
       exercises: exercises.map(exercise => ({
@@ -216,14 +231,10 @@ function Training() {
         sets: exerciseRecords[exercise.id] || []
       }))
     }
-    history.push(sessionData)
-    localStorage.setItem('trainingHistory', JSON.stringify(history))
+    addTrainingSession(sessionData)
     
     // トレーニングデータをクリア
-    localStorage.removeItem('currentTraining')
-    localStorage.removeItem('currentTrainingRecords')
-    localStorage.removeItem('hasTraining')
-    localStorage.removeItem('completedExercises')
+    clearTrainingSession()
     
     // 完了ページに遷移
     navigate('/training-complete')
@@ -251,17 +262,13 @@ function Training() {
                 onClick={() => removeExercise(exercise.id)}
                 title="削除"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  <line x1="10" y1="11" x2="10" y2="17"></line>
-                  <line x1="14" y1="11" x2="14" y2="17"></line>
-                </svg>
+                <TrashIcon width={20} height={20} color="#fff" />
               </button>
               <h2 className="exercise-name">{exercise.name}</h2>
               <button
                 className="complete-exercise-button"
                 onClick={() => completeExercise(exercise.id)}
+                disabled={!canCompleteExercise(exercise.id)}
               >
                 完了
               </button>
