@@ -130,11 +130,25 @@
   justify-content: center;
   align-items: center;
   gap: 0.75rem;
-  margin-right: 4rem;
+  padding-right: 2rem;
 }
+  .set-row-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .set-row-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 32px;
+    height: 100%;
+  }
 
 .set-number {
-  text-align: center;
+  text-align: right;
   font-weight: 600;
   color: #333;
   font-size: 1rem;
@@ -179,8 +193,7 @@
 
 .weight-input::placeholder,
 .reps-input::placeholder {
-  color: #999;
-  font-style: italic;
+  color: #ccc;
 }
 
 .add-set-button {
@@ -204,7 +217,6 @@
   flex-shrink: 0;
   line-height: 1;
   padding: 0;
-  margin-right: 1.5rem;
 }
 
 .add-set-button:hover {
@@ -248,6 +260,31 @@
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.add-training-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0.75rem;
+}
+
+.add-training-button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.add-training-button:active {
+  transform: translateY(0);
 }
 
 .complete-all-button:hover {
@@ -299,8 +336,12 @@
   }
 
   .set-row {
-    gap: 0.5rem;
+    gap: 0.4rem;
+    padding-left: 0.3rem;
   }
+    .set-row-main {
+      gap: 0.4rem;
+    }
 
   .set-number {
     font-size: 0.9rem;
@@ -318,7 +359,7 @@
   .reps-input {
     padding: 0.4rem 0.3rem;
     font-size: 0.85rem;
-    width: 70px;
+    width: 65px;
   }
 
   .add-set-button {
@@ -327,7 +368,6 @@
     min-width: 28px;
     min-height: 28px;
     font-size: 1.1rem;
-    margin-left: 0.5rem;
   }
 
   .remove-set-button {
@@ -366,8 +406,12 @@
   }
 
   .set-row {
-    gap: 0.4rem;
+    gap: 0.3rem;
+    padding-left: 0.2rem;
   }
+    .set-row-main {
+      gap: 0.3rem;
+    }
 
   .set-number {
     font-size: 0.85rem;
@@ -383,9 +427,9 @@
 
   .weight-input,
   .reps-input {
-    padding: 0.35rem 0.25rem;
-    font-size: 0.8rem;
-    width: 55px;
+    padding: 0.3rem 0.2rem;
+    font-size: 0.75rem;
+    width: 50px;
   }
 
   .remove-set-button {

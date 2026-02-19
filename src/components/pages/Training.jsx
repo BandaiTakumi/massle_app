@@ -144,38 +144,34 @@ function Training() {
 
   // 種目を削除（ページから削除のみ）
   const removeExercise = (exerciseId) => {
-    const exercise = exercises.find(ex => ex.id === exerciseId)
-    const confirmed = window.confirm(`「${exercise.name}」を削除しますか？`)
-    if (confirmed) {
-      const updatedExercises = exercises.filter(ex => ex.id !== exerciseId)
-      setExercises(updatedExercises)
-      
-      // exerciseRecordsからも削除
-      setExerciseRecords(prev => {
-        const updated = { ...prev }
-        delete updated[exerciseId]
-        return updated
-      })
-      
-      // localStorageのcurrentTrainingを更新
-      const currentTraining = getCurrentTraining()
-      if (currentTraining) {
-        currentTraining.exercises = updatedExercises
-        setCurrentTraining(currentTraining)
-      }
-      
-      // currentTrainingRecordsも更新
-      const records = getCurrentTrainingRecords()
-      if (records[exerciseId]) {
-        delete records[exerciseId]
-        setCurrentTrainingRecords(records)
-      }
-      
-      // メニュー登録画面の選択状態からも削除
-      const selectedExercises = getSelectedExercises()
-      const updatedSelection = selectedExercises.filter(id => id !== exerciseId)
-      saveSelectedExercises(updatedSelection)
+    const updatedExercises = exercises.filter(ex => ex.id !== exerciseId)
+    setExercises(updatedExercises)
+    
+    // exerciseRecordsからも削除
+    setExerciseRecords(prev => {
+      const updated = { ...prev }
+      delete updated[exerciseId]
+      return updated
+    })
+    
+    // localStorageのcurrentTrainingを更新
+    const currentTraining = getCurrentTraining()
+    if (currentTraining) {
+      currentTraining.exercises = updatedExercises
+      setCurrentTraining(currentTraining)
     }
+    
+    // currentTrainingRecordsも更新
+    const records = getCurrentTrainingRecords()
+    if (records[exerciseId]) {
+      delete records[exerciseId]
+      setCurrentTrainingRecords(records)
+    }
+    
+    // メニュー登録画面の選択状態からも削除
+    const selectedExercises = getSelectedExercises()
+    const updatedSelection = selectedExercises.filter(id => id !== exerciseId)
+    saveSelectedExercises(updatedSelection)
   }
 
   // 種目を完了（確認なしで削除）
@@ -323,48 +319,52 @@ function Training() {
                 const canDelete = (exerciseRecords[exercise.id] || []).length > 1
                 return (
                   <div key={index} className="set-row">
-                    <span className="set-number">{set.setNumber}</span>
-                    <div className="input-with-unit">
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        className="weight-input"
-                        value={set.weight}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                            updateSet(exercise.id, index, 'weight', value);
-                          }
-                        }}
-                        placeholder={previousSet?.weight || ''}
-                      />
-                      <span className="unit">kg</span>
+                    <div className="set-row-main">
+                      <span className="set-number">{set.setNumber}</span>
+                      <div className="input-with-unit">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          className="weight-input"
+                          value={set.weight}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                              updateSet(exercise.id, index, 'weight', value);
+                            }
+                          }}
+                          placeholder={previousSet?.weight || '0'}
+                        />
+                        <span className="unit">kg</span>
+                      </div>
+                      <div className="input-with-unit">
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          className="reps-input"
+                          value={set.reps}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '' || /^\d+$/.test(value)) {
+                              updateSet(exercise.id, index, 'reps', value);
+                            }
+                          }}
+                          placeholder={previousSet?.reps || '0'}
+                        />
+                        <span className="unit">rep</span>
+                      </div>
                     </div>
-                    <div className="input-with-unit">
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        className="reps-input"
-                        value={set.reps}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (value === '' || /^\d+$/.test(value)) {
-                            updateSet(exercise.id, index, 'reps', value);
-                          }
-                        }}
-                        placeholder={previousSet?.reps || ''}
-                      />
-                      <span className="unit">rep</span>
+                    <div className="set-row-actions">
+                      {canDelete && (
+                        <button
+                          className="remove-set-button"
+                          onClick={() => removeSet(exercise.id, index)}
+                          title="このセットを削除"
+                        >
+                          <TrashIcon width={16} height={16} color="#dc3545" />
+                        </button>
+                      )}
                     </div>
-                    {canDelete && (
-                      <button
-                        className="remove-set-button"
-                        onClick={() => removeSet(exercise.id, index)}
-                        title="このセットを削除"
-                      >
-                        <TrashIcon width={16} height={16} color="#dc3545" />
-                      </button>
-                    )}
                   </div>
                 )
               })}
@@ -379,6 +379,13 @@ function Training() {
           </div>
         ))}
       </div>
+
+      <button 
+        className="add-training-button" 
+        onClick={() => navigate('/')}
+      >
+        トレーニング追加
+      </button>
 
       <button 
         className="complete-all-button" 
