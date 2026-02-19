@@ -134,7 +134,7 @@ function Weight() {
 
   return (
     <div className="weight-page">
-      <h1>体重管理</h1>
+
 
       {/* 月ナビゲーション */}
       <div className="month-navigation">

@@ -32,7 +32,7 @@ function Footer() {
         className={`footer-button ${location.pathname === '/wight' ? 'active' : ''}`}
       >
         <span>⚖️</span>
-        <span>体重</span>
+        <span>体重管理</span>
       </Link>
     </footer>
   )
