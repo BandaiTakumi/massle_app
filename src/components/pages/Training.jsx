@@ -232,6 +232,12 @@ function Training() {
     const selectedExercises = getSelectedExercises()
     const updatedSelection = selectedExercises.filter(id => id !== exerciseId)
     saveSelectedExercises(updatedSelection)
+    
+    // 最後の種目を完了した場合、カレンダー画面に遷移
+    if (updatedExercises.length === 0) {
+      clearTrainingSession()
+      navigate('/calender')
+    }
   }
 
   // 種目の完了ボタン有効判定
@@ -359,7 +365,7 @@ function Training() {
                         onClick={() => removeSet(exercise.id, index)}
                         title="このセットを削除"
                       >
-                        ×
+                        <TrashIcon width={16} height={16} color="#dc3545" />
                       </button>
                     )}
                   </div>
