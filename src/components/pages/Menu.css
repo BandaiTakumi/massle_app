@@ -48,7 +48,6 @@
   overflow-y: auto;
   padding-right: 0.5rem;
   margin-bottom: 1rem;
-  margin-right: 1rem;
 }
 
 .exercise-list::-webkit-scrollbar {
@@ -136,7 +135,6 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
-  margin-right: 1rem;
 }
 
 .original-menu-button,
