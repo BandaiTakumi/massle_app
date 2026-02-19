@@ -289,7 +289,6 @@ function Training() {
   if (exercises.length === 0) {
     return (
       <div className="training-page">
-        <h1>トレーニング</h1>
         <p>トレーニングデータがありません</p>
       </div>
     )
@@ -297,8 +296,6 @@ function Training() {
 
   return (
     <div className="training-page">
-      <h1>トレーニング</h1>
-      
       <div className="training-exercises">
         {exercises.map((exercise) => (
           <div key={exercise.id} className="training-exercise-block">
@@ -321,44 +318,44 @@ function Training() {
             </div>
 
             <div className="sets-container">
-              <div className="sets-header">
-                <span className="set-label">セット</span>
-                <span className="weight-label">重量(kg)</span>
-                <span className="reps-label">rep数</span>
-              </div>
-
               {(exerciseRecords[exercise.id] || []).map((set, index) => {
                 const previousSet = getPreviousRecord(exercise.id, set.setNumber)
                 const canDelete = (exerciseRecords[exercise.id] || []).length > 1
                 return (
                   <div key={index} className="set-row">
                     <span className="set-number">{set.setNumber}</span>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      className="weight-input"
-                      value={set.weight}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                          updateSet(exercise.id, index, 'weight', value);
-                        }
-                      }}
-                      placeholder={previousSet?.weight || ''}
-                    />
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      className="reps-input"
-                      value={set.reps}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^\d+$/.test(value)) {
-                          updateSet(exercise.id, index, 'reps', value);
-                        }
-                      }}
-                      placeholder={previousSet?.reps || ''}
-                    />
+                    <div className="input-with-unit">
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        className="weight-input"
+                        value={set.weight}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                            updateSet(exercise.id, index, 'weight', value);
+                          }
+                        }}
+                        placeholder={previousSet?.weight || ''}
+                      />
+                      <span className="unit">kg</span>
+                    </div>
+                    <div className="input-with-unit">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        className="reps-input"
+                        value={set.reps}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || /^\d+$/.test(value)) {
+                            updateSet(exercise.id, index, 'reps', value);
+                          }
+                        }}
+                        placeholder={previousSet?.reps || ''}
+                      />
+                      <span className="unit">rep</span>
+                    </div>
                     {canDelete && (
                       <button
                         className="remove-set-button"
