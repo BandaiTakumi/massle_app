@@ -5,7 +5,7 @@
   flex-direction: column;
   height: 100vh;
   padding: 1.618rem;
-  padding-bottom: calc(80px + 1.618rem);
+  padding-bottom: calc(60px + 1.618rem);
   background-color: #ccc;
   box-sizing: border-box;
   overflow-y: auto;
@@ -359,7 +359,7 @@
 @media (max-width: 768px) {
   .calender-page {
     padding: 1rem;
-    padding-bottom: calc(70px + 1rem);
+    padding-bottom: calc(55px + 1rem);
   }
 
   .training-details {
@@ -450,7 +450,7 @@
 @media (max-width: 480px) {
   .calender-page {
     padding: 0.618rem;
-    padding-bottom: calc(70px + 0.618rem);
+    padding-bottom: calc(50px + 0.618rem);
   }
 
   .training-details {

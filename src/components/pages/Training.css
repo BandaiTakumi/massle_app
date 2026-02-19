@@ -2,7 +2,7 @@
   width: 100%;
   margin: 0;
   padding: 1.618rem;
-  padding-bottom: calc(80px + 1.618rem);
+  padding-bottom: calc(60px + 1.618rem);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -262,7 +262,7 @@
 @media (max-width: 768px) {
   .training-page {
     padding: 1rem;
-    padding-bottom: calc(70px + 1rem);
+    padding-bottom: calc(55px + 1rem);
   }
 
   .training-page h1 {
@@ -332,6 +332,14 @@
   .delete-exercise-button svg {
     width: 16px;
     height: 16px;
+  }
+}
+
+/* 小型スマホ対応（480px以下） */
+@media (max-width: 480px) {
+  .training-page {
+    padding: 0.618rem;
+    padding-bottom: calc(50px + 0.618rem);
   }
 }
 

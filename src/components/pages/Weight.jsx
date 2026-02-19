@@ -13,7 +13,18 @@ function Weight() {
   })
   const [weight, setWeight] = useState('')
   const [weightHistory, setWeightHistoryState] = useState(() => getWeightHistory())
-  const [tdee, setTdee] = useState(null)
+  
+  // TDEEを計算（最新の記録から）
+  const calculateCurrentTDEE = () => {
+    const history = getWeightHistory()
+    if (history.length === 0) return null
+    
+    // 最新の記録を取得
+    const latestRecord = history[history.length - 1]
+    const bmr = calculateBMR(latestRecord.weight, latestRecord.height, latestRecord.age)
+    return calculateTDEE(bmr)
+  }
+  
   const [currentDate, setCurrentDate] = useState(new Date())
 
   // BMI計算
@@ -83,11 +94,6 @@ function Weight() {
     const updatedHistory = getWeightHistory()
     setWeightHistoryState(updatedHistory)
 
-    // TDEE計算
-    const bmr = calculateBMR(weightNum, heightNum, ageNum)
-    const calculatedTdee = calculateTDEE(bmr)
-    setTdee(calculatedTdee)
-
     // 体重入力欄をリセット
     setWeight('')
   }
@@ -121,6 +127,7 @@ function Weight() {
 
   const monthData = getMonthData()
   const hasData = monthData.length > 0
+  const tdee = calculateCurrentTDEE()
 
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth() + 1
@@ -215,27 +222,25 @@ function Weight() {
       )}
 
       {hasData && (
-        <>
-          <div className="charts-section">
-            <div className="chart-container">
-              <h3>BMI推移</h3>
-              <LineChart data={monthData} dataKey="bmi" color="#007bff" unit="" />
-            </div>
-
-            <div className="chart-container">
-              <h3>体重推移</h3>
-              <LineChart data={monthData} dataKey="weight" color="#28a745" unit="kg" />
-            </div>
+        <div className="charts-section">
+          <div className="chart-container">
+            <h3>BMI推移</h3>
+            <LineChart data={monthData} dataKey="bmi" color="#007bff" unit="" />
           </div>
 
-          {tdee && (
-            <div className="tdee-section">
-              <h3>想定必要カロリー (TDEE)</h3>
-              <p className="tdee-value">{tdee} kcal/日</p>
-              <p className="tdee-note">※活動レベル: 中程度の運動（週4-5日）で計算</p>
-            </div>
-          )}
-        </>
+          <div className="chart-container">
+            <h3>体重推移</h3>
+            <LineChart data={monthData} dataKey="weight" color="#28a745" unit="kg" />
+          </div>
+        </div>
+      )}
+
+      {tdee && (
+        <div className="tdee-section">
+          <h3>想定必要カロリー (TDEE)</h3>
+          <p className="tdee-value">{tdee} kcal/日</p>
+          <p className="tdee-note">※活動レベル: 中程度の運動（週4-5日）で計算</p>
+        </div>
       )}
     </div>
   )
