@@ -17,16 +17,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.25rem;
-  padding: 0.382rem 1rem;
+  padding: 0.382rem 0.5rem;
   text-decoration: none;
   color: #666;
   transition: color 0.2s;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  min-width: 70px;
+  flex: 1;
+  max-width: 100px;
 }
 
 .footer-button span:first-child {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 .footer-button:hover {
@@ -47,12 +51,14 @@
 
   .footer-button {
     gap: 0.15rem;
-    padding: 0.25rem 0.618rem;
-    font-size: 0.75rem;
+    padding: 0.25rem 0.3rem;
+    font-size: 0.65rem;
+    min-width: 60px;
+    max-width: 80px;
   }
 
   .footer-button span:first-child {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -63,11 +69,13 @@
   }
 
   .footer-button {
-    padding: 0.2rem 0.5rem;
-    font-size: 0.7rem;
+    padding: 0.2rem 0.2rem;
+    font-size: 0.6rem;
+    min-width: 50px;
+    max-width: 70px;
   }
 
   .footer-button span:first-child {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 }
