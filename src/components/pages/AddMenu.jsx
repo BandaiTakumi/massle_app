@@ -50,45 +50,45 @@ function AddMenu() {
 
   return (
     <div className="add-menu-page">
-      <h2>オリジナルメニュー追加</h2>
+      <div className="add-menu-content">
+        <h2>オリジナルメニュー追加</h2>
 
-      <div className="form-section">
-        <label className="form-label">種目名</label>
-        <input
-          type="text"
-          className="menu-name-input"
-          placeholder="例：プッシュアップ"
-          value={menuName}
-          onChange={(e) => setMenuName(e.target.value)}
-        />
-      </div>
-
-      <div className="form-section">
-        <label className="form-label">部位選択（複数選択可）</label>
-        <div className="category-selection">
-          {DEFAULT_CATEGORIES.map((category) => (
-            <button
-              key={category}
-              className={`category-select-button ${selectedCategories.includes(category) ? "selected" : ""}`}
-              onClick={() => handleCategoryToggle(category)}
-            >
-              {category}
-            </button>
-          ))}
+        <div className="form-section">
+          <label className="form-label">種目名</label>
+          <input
+            type="text"
+            className="menu-name-input"
+            placeholder="例：プッシュアップ"
+            value={menuName}
+            onChange={(e) => setMenuName(e.target.value)}
+          />
         </div>
-      </div>
 
-      <div className="note-section">
-        <p className="note-text">
-          ※ 登録したメニューは「メニュー登録」画面に表示されます。
-          <br />
-          登録したメニュー消費カロリーは1repで0.2kcal固定です
-        </p>
-      </div>
+        <div className="form-section">
+          <label className="form-label">部位選択（複数選択可）</label>
+          <div className="category-selection">
+            {DEFAULT_CATEGORIES.map((category) => (
+              <button
+                key={category}
+                className={`category-select-button ${selectedCategories.includes(category) ? "selected" : ""}`}
+                onClick={() => handleCategoryToggle(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      <button className="register-button" onClick={handleRegister}>
-        登録
-      </button>
+        <div className="note-section">
+          <p className="note-text">
+            ※ 登録したメニューは「メニュー登録」画面に表示されます。
+          </p>
+        </div>
+
+        <button className="register-button" onClick={handleRegister}>
+          登録
+        </button>
+      </div>
     </div>
   );
 }
