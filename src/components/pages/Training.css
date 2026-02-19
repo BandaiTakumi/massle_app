@@ -160,6 +160,9 @@
   transition: border-color 0.2s;
   background-color: #fff;
   color: #000;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .weight-input:focus,
@@ -290,14 +293,14 @@
 
   .sets-header {
     font-size: 0.75rem;
-    grid-template-columns: 40px 1fr 1fr 24px;
-    gap: 0.25rem;
+    grid-template-columns: 35px 1fr 1fr 24px;
+    gap: 0.2rem;
     padding: 0.25rem;
   }
 
   .set-row {
-    grid-template-columns: 40px 1fr 1fr 24px;
-    gap: 0.25rem;
+    grid-template-columns: 35px 1fr 1fr 24px;
+    gap: 0.2rem;
   }
 
   .set-number {
@@ -308,7 +311,6 @@
   .reps-input {
     padding: 0.5rem 0.25rem;
     font-size: 0.9rem;
-    min-width: 0;
     border-width: 1px;
   }
 
@@ -324,6 +326,11 @@
     width: 20px;
     height: 20px;
     font-size: 1rem;
+  }
+
+  .remove-set-button svg {
+    width: 14px;
+    height: 14px;
   }
 
   .complete-exercise-button {
@@ -348,6 +355,37 @@
   .training-page {
     padding: 0.618rem;
     padding-bottom: calc(50px + 0.618rem);
+  }
+
+  .sets-header {
+    grid-template-columns: 30px 1fr 1fr 20px;
+    gap: 0.15rem;
+    font-size: 0.7rem;
+  }
+
+  .set-row {
+    grid-template-columns: 30px 1fr 1fr 20px;
+    gap: 0.15rem;
+  }
+
+  .set-number {
+    font-size: 0.85rem;
+  }
+
+  .weight-input,
+  .reps-input {
+    padding: 0.4rem 0.2rem;
+    font-size: 0.85rem;
+  }
+
+  .remove-set-button {
+    width: 18px;
+    height: 18px;
+  }
+
+  .remove-set-button svg {
+    width: 14px;
+    height: 14px;
   }
 }
 
