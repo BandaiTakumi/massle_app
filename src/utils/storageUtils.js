@@ -276,3 +276,23 @@ export const addWeightRecord = (record) => {
   history.push(record)
   setWeightHistory(history)
 }
+
+// ========================================
+// カレンダー選択日付関連
+// ========================================
+
+/**
+ * カレンダーの選択日付を取得
+ * @returns {string | null}
+ */
+export const getCalendarSelectedDate = () => {
+  return getStorageString(STORAGE_KEYS.CALENDAR_SELECTED_DATE, null)
+}
+
+/**
+ * カレンダーの選択日付を保存
+ * @param {string} dateString - ISO形式の日付文字列
+ */
+export const setCalendarSelectedDate = (dateString) => {
+  setStorageString(STORAGE_KEYS.CALENDAR_SELECTED_DATE, dateString)
+}

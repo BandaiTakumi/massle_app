@@ -10,6 +10,7 @@ export const STORAGE_KEYS = {
   HAS_TRAINING: 'hasTraining',
   USER_PROFILE: 'userProfile',
   WEIGHT_HISTORY: 'weightHistory',
+  CALENDAR_SELECTED_DATE: 'calendarSelectedDate',
 }
 
 // Color Theme

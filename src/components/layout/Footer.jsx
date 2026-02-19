@@ -11,7 +11,7 @@ function Footer() {
         className={`footer-button ${location.pathname === '/calender' ? 'active' : ''}`}
       >
         <span>📅</span>
-        <span>カレンダー</span>
+        <span>過去のトレーニング</span>
       </Link>
       <Link 
         to="/" 

@@ -12,5 +12,13 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding-bottom: 50px;
+  padding-bottom: 70px;
+  margin-bottom: 0;
+}
+
+/* PC版用の調整 */
+@media (min-width: 769px) {
+  .main-content {
+    padding-bottom: 80px;
+  }
 }

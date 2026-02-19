@@ -1,27 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './Weight.css'
 import { getUserProfile, setUserProfile, getWeightHistory, addWeightRecord } from '../../utils/storageUtils'
 
 function Weight() {
-  const [age, setAge] = useState('')
-  const [height, setHeight] = useState('')
+  const [age, setAge] = useState(() => {
+    const profile = getUserProfile()
+    return profile ? profile.age.toString() : ''
+  })
+  const [height, setHeight] = useState(() => {
+    const profile = getUserProfile()
+    return profile ? profile.height.toString() : ''
+  })
   const [weight, setWeight] = useState('')
-  const [weightHistory, setWeightHistoryState] = useState([])
+  const [weightHistory, setWeightHistoryState] = useState(() => getWeightHistory())
   const [tdee, setTdee] = useState(null)
   const [currentDate, setCurrentDate] = useState(new Date())
-
-  useEffect(() => {
-    // 保存されているプロフィールを読み込む
-    const profile = getUserProfile()
-    if (profile) {
-      setAge(profile.age.toString())
-      setHeight(profile.height.toString())
-    }
-
-    // 体重履歴を読み込む
-    const history = getWeightHistory()
-    setWeightHistoryState(history)
-  }, [])
 
   // BMI計算
   const calculateBMI = (weightKg, heightCm) => {
@@ -63,7 +56,7 @@ function Weight() {
       return
     }
 
-    const confirmed = window.confirm('体重データを確定しますか？\n一度登録すると削除できません。')
+    const confirmed = window.confirm('体重データを確定しますか？\n登録できるのは１日１回です。\n一度登録すると削除できません。')
     if (!confirmed) return
 
     const ageNum = parseFloat(age)
@@ -214,6 +207,12 @@ function Weight() {
           確定
         </button>
       </div>
+
+      {!hasData && (
+        <div className="no-data-message">
+          <p>今月の記録はありません</p>
+        </div>
+      )}
 
       {hasData && (
         <>

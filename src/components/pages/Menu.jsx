@@ -29,19 +29,16 @@ function Menu() {
   const [selectedExercises, setSelectedExercises] = useState(() => {
     return getSelectedExercises();
   });
-  const [exercisesData, setExercisesData] = useState([]);
-
-  // localStorageからexercisesデータを読み込む（初回はJSONから）
-  useEffect(() => {
+  const [exercisesData, setExercisesData] = useState(() => {
     const storedExercises = getExercises();
     if (storedExercises.length > 0) {
-      setExercisesData(storedExercises);
+      return storedExercises;
     } else {
       // 初回読み込み時はJSONファイルからlocalStorageに保存
       setExercises(exercisesDataJson);
-      setExercisesData(exercisesDataJson);
+      return exercisesDataJson;
     }
-  }, []);
+  });
 
   useEffect(() => {
     saveSelectedCategory(selectedCategory);

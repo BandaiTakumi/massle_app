@@ -1,14 +1,15 @@
 .training-page {
   width: 100%;
   margin: 0;
-  padding: 1rem;
-  padding-bottom: calc(50px + 1rem);
+  padding: 1.618rem;
+  padding-bottom: calc(80px + 1.618rem);
   height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #ccc;
   box-sizing: border-box;
   overflow: hidden;
+  max-width: 100vw;
 }
 
 .training-page h1 {
@@ -47,8 +48,8 @@
 .training-exercise-block {
   background-color: #fff;
   border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.618rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .exercise-header {
@@ -260,7 +261,8 @@
 /* スマホ対応 */
 @media (max-width: 768px) {
   .training-page {
-    padding: 0.5rem;
+    padding: 1rem;
+    padding-bottom: calc(70px + 1rem);
   }
 
   .training-page h1 {
@@ -273,7 +275,7 @@
   }
 
   .training-exercise-block {
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
   .exercise-name {

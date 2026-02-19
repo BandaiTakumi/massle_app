@@ -1,19 +1,25 @@
 import { useState, useEffect } from 'react'
 import './Calender.css'
-import { getTrainingHistory, setTrainingHistory } from '../../utils/storageUtils'
+import { getTrainingHistory, setTrainingHistory, getCalendarSelectedDate, setCalendarSelectedDate } from '../../utils/storageUtils'
 import { generateCalendarDays, isSameDay, formatDateJP, formatTime } from '../../utils/dateUtils'
 import { TrashIcon } from '../common/Icons'
 
 function Calender() {
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [selectedDate, setSelectedDate] = useState(new Date())
-  const [trainingHistory, setTrainingHistoryState] = useState([])
-  const [expandedExercises, setExpandedExercises] = useState({})  
+  const [selectedDate, setSelectedDate] = useState(() => {
+    // localStorageから保存された日付を復元
+    const savedDate = getCalendarSelectedDate()
+    return savedDate ? new Date(savedDate) : new Date()
+  })
+  const [trainingHistory, setTrainingHistoryState] = useState(() => getTrainingHistory())
+  const [expandedExercises, setExpandedExercises] = useState({})
 
+  // selectedDateが変更されたらlocalStorageに保存
   useEffect(() => {
-    const history = getTrainingHistory()
-    setTrainingHistoryState(history)
-  }, [])
+    if (selectedDate) {
+      setCalendarSelectedDate(selectedDate.toISOString())
+    }
+  }, [selectedDate])
 
   // trainingHistoryを更新してlocalStorageにも保存
   const updateTrainingHistory = (newHistory) => {
@@ -47,6 +53,12 @@ function Calender() {
   const goToNextMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))
     setSelectedDate(null)
+  }
+
+  // 表示中の月が今月かチェック
+  const isCurrentMonth = () => {
+    const now = new Date()
+    return currentDate.getFullYear() === now.getFullYear() && currentDate.getMonth() === now.getMonth()
   }
 
   // 日付クリック
@@ -95,9 +107,12 @@ function Calender() {
         <h2 className="current-month">
           {year}年 {month + 1}月
         </h2>
-        <button className="month-nav-button" onClick={goToNextMonth}>
-          →
-        </button>
+        {!isCurrentMonth() && (
+          <button className="month-nav-button" onClick={goToNextMonth}>
+            →
+          </button>
+        )}
+        {isCurrentMonth() && <div className="month-nav-spacer"></div>}
       </div>
 
       {/* 曜日ヘッダー */}

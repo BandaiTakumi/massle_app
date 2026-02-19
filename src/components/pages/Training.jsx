@@ -17,16 +17,13 @@ import {
 
 function Training() {
   const navigate = useNavigate()
-  const [exercises, setExercises] = useState([])
-  const [exerciseRecords, setExerciseRecords] = useState({})
-
-  useEffect(() => {
-    // localStorageから選択されたトレーニングデータを取得
+  const [exercises, setExercises] = useState(() => {
+    const savedTraining = getCurrentTraining()
+    return savedTraining ? savedTraining.exercises : []
+  })
+  const [exerciseRecords, setExerciseRecords] = useState(() => {
     const savedTraining = getCurrentTraining()
     if (savedTraining) {
-      setExercises(savedTraining.exercises)
-      
-      // 保存されている入力データを復元
       let records = getCurrentTrainingRecords()
       
       // すべての種目に対して初期セットを確保
@@ -38,9 +35,10 @@ function Training() {
         }
       })
       
-      setExerciseRecords(records)
+      return records
     }
-  }, [])
+    return {}
+  })
 
   // exerciseRecordsが変更されたらlocalStorageに保存
   useEffect(() => {
@@ -52,16 +50,53 @@ function Training() {
   // 前回の記録を取得
   const getPreviousRecord = (exerciseId, setNumber) => {
     const history = getTrainingHistory()
-    const previousSession = history.find(session => 
-      session.exercises.some(ex => ex.id === exerciseId)
+    
+    // 履歴を日付順（新しい順）にソート
+    const sortedHistory = [...history].sort((a, b) => {
+      return new Date(b.date) - new Date(a.date)
+    })
+    
+    // 該当する種目を含むセッションをすべて取得
+    const sessionsWithExercise = sortedHistory
+      .map(session => {
+        const exercise = session.exercises.find(ex => ex.id === exerciseId)
+        if (exercise) {
+          return {
+            date: session.date,
+            exercise: exercise
+          }
+        }
+        return null
+      })
+      .filter(item => item !== null)
+    
+    if (sessionsWithExercise.length === 0) {
+      return null
+    }
+    
+    // 同じ日に複数回記録がある場合、最新のもの（completedAtが最新）を選択
+    const latestDate = sessionsWithExercise[0].date
+    const sameDateSessions = sessionsWithExercise.filter(item => 
+      new Date(item.date).toDateString() === new Date(latestDate).toDateString()
     )
     
-    if (previousSession) {
-      const previousExercise = previousSession.exercises.find(ex => ex.id === exerciseId)
-      const previousSet = previousExercise?.sets?.[setNumber - 1]
-      return previousSet || null
+    // completedAtでソート（新しい順）
+    const latestExercise = sameDateSessions.sort((a, b) => {
+      const aTime = a.exercise.completedAt || a.date
+      const bTime = b.exercise.completedAt || b.date
+      return new Date(bTime) - new Date(aTime)
+    })[0].exercise
+    
+    const previousSets = latestExercise.sets || []
+    const previousSetCount = previousSets.length
+    
+    // セット番号が前回の総セット数を超える場合、最終セットを返す
+    if (setNumber > previousSetCount) {
+      return previousSets[previousSetCount - 1] || null
     }
-    return null
+    
+    // 通常は該当するセット番号の記録を返す
+    return previousSets[setNumber - 1] || null
   }
 
   // セットの入力を更新
