@@ -235,7 +235,7 @@ function Weight() {
         </div>
       )}
 
-      {tdee && (
+      {tdee && isCurrentMonth() && (
         <div className="tdee-section">
           <h3>想定必要カロリー (TDEE)</h3>
           <p className="tdee-value">{tdee} kcal/日</p>
