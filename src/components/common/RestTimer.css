@@ -1,0 +1,149 @@
+.rest-timer {
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  color: #000;
+}
+
+.rest-inputs label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-row input {
+  width: 56px;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.confirm-btn {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rest-running {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+.meter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 6px;
+  z-index: 0;
+}
+
+.time-display {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  color: #000;
+}
+
+.stop-btn {
+  position: relative;
+  z-index: 1;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.state-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.9);
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.04);
+  color: #000;
+}
+
+/* popup small */
+.rest-timer-popup {
+  position: fixed;
+  left: auto;
+  top: 12px;
+  background: #fff;
+  color: #000;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  z-index: 9999;
+  width: 80px;
+  height: 80px;
+  touch-action: none;
+}
+
+.popup-icon {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.popup-time {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.popup-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .rest-timer-popup {
+    bottom: calc(55px + 10px);
+    width: 72px;
+    height: 72px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rest-timer-popup {
+    bottom: calc(50px + 8px);
+    width: 64px;
+    height: 64px;
+    right: 0.75rem;
+  }
+  .popup-time {
+    font-size: 0.8rem;
+  }
+}

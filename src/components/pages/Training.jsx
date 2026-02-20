@@ -2,6 +2,7 @@ import './Training.css'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TrashIcon } from '../common/Icons'
+import RestTimer from '../common/RestTimer'
 import {
   getCurrentTraining,
   setCurrentTraining,
@@ -292,6 +293,7 @@ function Training() {
 
   return (
     <div className="training-page">
+      <RestTimer />
       <div className="training-exercises">
         {exercises.map((exercise) => (
           <div key={exercise.id} className="training-exercise-block">
