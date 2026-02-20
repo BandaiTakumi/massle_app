@@ -322,7 +322,7 @@ function Training() {
                 return (
                   <div key={index} className="set-row">
                     <div className="set-row-main">
-                      <span className="set-number">{set.setNumber}</span>
+                      <span className="set-number">{set.setNumber} set</span>
                       <div className="input-with-unit">
                         <input
                           type="text"

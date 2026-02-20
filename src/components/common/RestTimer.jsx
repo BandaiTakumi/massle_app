@@ -21,6 +21,13 @@ function writeStateToStorage(state) {
   }
 }
 
+function formatTime(sec) {
+  const s = Math.max(0, Math.floor(sec || 0))
+  const m = Math.floor(s / 60)
+  const r = s % 60
+  return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0')
+}
+
 export default function RestTimer({ compact = false }) {
   const saved = readStateFromStorage()
   const [minutes, setMinutes] = useState(saved?.minutes?.toString() ?? '1')
@@ -147,6 +154,22 @@ export default function RestTimer({ compact = false }) {
     }
   }
 
+  // restart helper: reset remaining to total and resume
+  const restart = () => {
+    const t = total ?? (Math.max(0, parseInt(minutes || '0', 10)) * 60 + Math.max(0, parseInt(seconds || '0', 10)))
+    if (t <= 0) return
+    // reset to full time but leave paused so user can resume manually
+    setTotal(t)
+    setRemaining(t)
+    setRunning(false)
+    setPaused(true)
+    setClosed(false)
+    writeStateToStorage({ minutes: parseInt(minutes || '0', 10), seconds: parseInt(seconds || '0', 10), running: false, paused: true, remaining: t, total: t, closed: false })
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new Event('rest_timer_change'))
+    }
+  }
+
   // dragging handlers for popup
   useEffect(() => {
     const onMove = (e) => {
@@ -208,12 +231,13 @@ export default function RestTimer({ compact = false }) {
   const displaySeconds = remaining !== null ? (remaining % 60) : parseInt(seconds || '0', 10)
 
   const hasTimer = (remaining !== null) || (total !== null)
+  const startTotalSec = total ?? (Math.max(0, parseInt(minutes || '0', 10)) * 60 + Math.max(0, parseInt(seconds || '0', 10)))
 
     if (compact) {
     // popup view uses component state so it stays in sync across instances
     if (!hasTimer || closed) return null
     const storedTotal = (remaining ?? total ?? 0)
-    const icon = running ? (paused ? '▶' : '⏸') : '■'
+    const icon = (running && !paused) ? '⏸' : '▶'
     return (
       <div
         className="rest-timer-popup"
@@ -254,7 +278,8 @@ export default function RestTimer({ compact = false }) {
         }}
       >
         <div className="popup-icon">{icon}</div>
-        <div className="popup-time">{String(Math.floor(storedTotal / 60)).padStart(2,'0')}:{String(storedTotal % 60).padStart(2,'0')}</div>
+        <div className="popup-time">{formatTime(storedTotal)}</div>
+        <div className="popup-total">/{formatTime(startTotalSec)}</div>
         <button className="popup-close" onClick={(e) => {
           e.stopPropagation()
           stop()
@@ -267,8 +292,8 @@ export default function RestTimer({ compact = false }) {
     <div className="rest-timer">
       {!hasTimer ? (
         <div className="rest-inputs">
-          <label>レストを何分取りますか？</label>
-          <div className="input-row">
+          <label>レスト時間は？</label>
+          <div className="rest-input-row">
             <input type="text" inputMode="numeric" value={minutes} onChange={(e) => { const v = e.target.value; if (v === '' || /^\d+$/.test(v)) setMinutes(v) }} />
             <span>分</span>
             <input type="text" inputMode="numeric" value={seconds} onChange={(e) => { const v = e.target.value; if (v === '' || /^\d+$/.test(v)) setSeconds(v) }} />
@@ -278,9 +303,13 @@ export default function RestTimer({ compact = false }) {
         </div>
       ) : (
         <div className={`rest-running ${paused && !running ? 'paused' : ''}`} onClick={() => togglePause()} role="button" tabIndex={0}>
-          <div className="meter" style={{ background: `linear-gradient(270deg, #28a745 ${percent}%, #e6e6e6 ${percent}%)` }}></div>
+          <div className="meter" style={{ background: `linear-gradient(270deg, #e6e6e6 ${percent}%, #28a745 ${percent}%)` }}></div>
           <div className="state-icon">{paused ? '▶' : '⏸'}</div>
-          <div className="time-display">{String(displayMinutes).padStart(2,'0')}:{String(displaySeconds).padStart(2,'0')}</div>
+          <div className="time-display">
+            <span className="remaining">{String(displayMinutes).padStart(2,'0')}:{String(displaySeconds).padStart(2,'0')}</span>
+            <span className="total">/{formatTime(startTotalSec)}</span>
+          </div>
+          <button className="restart-btn" onClick={(e) => { e.stopPropagation(); restart() }} title="再スタート">↻</button>
           <button className="stop-btn" onClick={(e) => { e.stopPropagation(); stop() }}>✖</button>
         </div>
       )}
