@@ -1,0 +1,206 @@
+.rest-timer {
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  color: #000;
+}
+
+.rest-inputs label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-row input {
+  width: 56px;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.confirm-btn {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rest-running {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+.meter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 6px;
+  z-index: 0;
+}
+.rest-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+.rest-input-row input {
+  width: 56px;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  color: #000;
+  background-color: #fff;
+}
+
+.stop-btn {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #000;
+  padding: 0;
+}
+
+.restart-btn {
+  position: relative;
+  padding: 0.5rem;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  font-size: 1.05rem;
+  cursor: pointer;
+  color: #000;
+  margin-left: auto;
+}
+
+.state-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+/* popup small */
+.rest-timer-popup {
+  position: fixed;
+  left: var(--rest-popup-left, auto);
+  top: var(--rest-popup-top, 12px);
+  background: #fff;
+  color: #000;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  z-index: 9999;
+  width: 80px;
+  height: 80px;
+  touch-action: none;
+}
+
+.meter {
+  background: linear-gradient(270deg, #e6e6e6 var(--rest-meter-percent, 0%), #28a745 var(--rest-meter-percent, 0%));
+}
+.time-display {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  color: #000;
+}
+.time-display .total {
+  font-weight: 500;
+  color: #666;
+  margin-left: 0.5rem;
+  font-size: 0.85em;
+}
+
+.popup-total {
+  font-size: 0.75rem;
+  color: #666;
+  margin-left: 0.25rem;
+  font-weight: 500;
+}
+
+.popup-icon {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.popup-time {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.popup-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+}
+
+.popup-hide {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .rest-timer-popup {
+    bottom: calc(55px + 10px);
+    width: 72px;
+    height: 72px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rest-timer-popup {
+    bottom: calc(50px + 8px);
+    width: 64px;
+    height: 64px;
+    right: 0.75rem;
+  }
+  .popup-time {
+    font-size: 0.8rem;
+  }
+}
