@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import './RestTimer.css'
 
 const STORAGE_KEY = 'REST_TIMER_STATE'
@@ -15,7 +15,9 @@ function readStateFromStorage() {
 
 function writeStateToStorage(state) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    const existing = readStateFromStorage() || {}
+    const merged = { ...existing, ...state }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
   } catch (err) {
     console.warn('writeStateToStorage failed', err)
   }
@@ -40,10 +42,18 @@ export default function RestTimer({ compact = false }) {
     try {
       const raw = localStorage.getItem('REST_TIMER_POPUP_POS')
       if (raw) return JSON.parse(raw)
-    } catch (err) {
-      console.warn('read popup pos failed', err)
+    } catch {
+      console.warn('read popup pos failed')
     }
     return { x: window?.innerWidth ? window.innerWidth - 96 : 9999, y: 12 }
+  })
+  const [popupHidden, setPopupHidden] = useState(() => {
+    try {
+      const s = readStateFromStorage()
+      return !!(s && s.popupHidden)
+    } catch {
+      return false
+    }
   })
   const dragRef = useRef({ dragging: false, startX: 0, startY: 0, initX: 0, initY: 0 })
   const [closed, setClosed] = useState(false)
@@ -63,6 +73,7 @@ export default function RestTimer({ compact = false }) {
         return
       }
       setClosed(!!data.closed)
+      setPopupHidden(!!data.popupHidden)
       setMinutes(data.minutes?.toString() ?? '1')
       setSeconds(data.seconds?.toString() ?? '0')
       setRunning(!!data.running)
@@ -77,6 +88,29 @@ export default function RestTimer({ compact = false }) {
       window.removeEventListener('rest_timer_change', onStorage)
     }
   }, [])
+
+  // ensure popup stays in viewport on resize
+  useEffect(() => {
+    function handleResize() {
+      setPopupPos((p) => {
+        const maxX = Math.max(6, window.innerWidth - 96)
+        const maxY = Math.max(6, window.innerHeight - 56)
+        return { x: Math.min(p.x, maxX), y: Math.min(p.y, maxY) }
+      })
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // expose popup position and meter percent as CSS vars (avoid inline styles)
+  useEffect(() => {
+    try {
+      document.documentElement.style.setProperty('--rest-popup-left', popupPos.x + 'px')
+      document.documentElement.style.setProperty('--rest-popup-top', popupPos.y + 'px')
+    } catch {
+      // ignore
+    }
+  }, [popupPos])
 
   useEffect(() => {
     if (running && !paused) {
@@ -108,22 +142,6 @@ export default function RestTimer({ compact = false }) {
     }
   }, [running, paused, minutes, seconds, total])
 
-  const start = () => {
-    const min = Math.max(0, parseInt(minutes || '0', 10))
-    const sec = Math.max(0, parseInt(seconds || '0', 10))
-    const tot = min * 60 + sec
-    if (tot <= 0) return
-    setTotal(tot)
-    setRemaining(tot)
-    setRunning(true)
-    setPaused(false)
-    setClosed(false)
-    writeStateToStorage({ minutes: min, seconds: sec, running: true, paused: false, remaining: tot, total: tot, closed: false })
-    // notify other listeners (same-window)
-    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
-      window.dispatchEvent(new Event('rest_timer_change'))
-    }
-  }
 
   const stop = () => {
     const savedBefore = { minutes: parseInt(minutes || '0', 10), seconds: parseInt(seconds || '0', 10) }
@@ -137,6 +155,15 @@ export default function RestTimer({ compact = false }) {
     setTotal(null)
     setMinutes(savedBefore.minutes.toString())
     setSeconds(savedBefore.seconds.toString())
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new Event('rest_timer_change'))
+    }
+  }
+
+  const handleHidePopup = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation()
+    setPopupHidden(true)
+    writeStateToStorage({ popupHidden: true })
     if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       window.dispatchEvent(new Event('rest_timer_change'))
     }
@@ -240,6 +267,14 @@ export default function RestTimer({ compact = false }) {
 
   const percent = total ? Math.max(0, Math.min(100, Math.round(((total - (remaining ?? total)) / total) * 100))) : 0
 
+  useEffect(() => {
+    try {
+      document.documentElement.style.setProperty('--rest-meter-percent', percent + '%')
+    } catch {
+      // ignore
+    }
+  }, [percent])
+
   const displayMinutes = remaining !== null ? Math.floor(remaining / 60) : parseInt(minutes || '0', 10)
   const displaySeconds = remaining !== null ? (remaining % 60) : parseInt(seconds || '0', 10)
 
@@ -248,13 +283,12 @@ export default function RestTimer({ compact = false }) {
 
     if (compact) {
     // popup view uses component state so it stays in sync across instances
-    if (!hasTimer || closed) return null
+    if (!hasTimer || closed || popupHidden) return null
     const storedTotal = (remaining ?? total ?? 0)
     const icon = (running && !paused) ? '⏸' : '▶'
     return (
       <div
         className="rest-timer-popup"
-        style={{ left: popupPos.x + 'px', top: popupPos.y + 'px', right: 'auto', bottom: 'auto' }}
         onMouseDown={(e) => {
           e.stopPropagation()
           dragRef.current.dragging = true
@@ -293,6 +327,7 @@ export default function RestTimer({ compact = false }) {
         <div className="popup-icon">{icon}</div>
         <div className="popup-time">{formatTime(storedTotal)}</div>
         <div className="popup-total">/{formatTime(startTotalSec)}</div>
+        <button className="popup-hide" onClick={(e) => { e.stopPropagation(); handleHidePopup(e) }} title="非表示">_</button>
         <button className="popup-close" onClick={(e) => {
           e.stopPropagation()
           stop()
@@ -316,7 +351,7 @@ export default function RestTimer({ compact = false }) {
         </div>
       ) : (
         <div className={`rest-running ${paused && !running ? 'paused' : ''}`} onClick={() => togglePause()} role="button" tabIndex={0}>
-          <div className="meter" style={{ background: `linear-gradient(270deg, #e6e6e6 ${percent}%, #28a745 ${percent}%)` }}></div>
+          <div className="meter"></div>
           <div className="state-icon">{paused ? '▶' : '⏸'}</div>
           <div className="time-display">
             <span className="remaining">{String(displayMinutes).padStart(2,'0')}:{String(displaySeconds).padStart(2,'0')}</span>

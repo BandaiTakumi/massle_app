@@ -311,6 +311,10 @@
   box-shadow: none;
 }
 
+.popup-visibility label {
+    color: #222;
+  }
+
 /* スマホ対応 */
 @media (max-width: 768px) {
   .training-page {
@@ -379,6 +383,17 @@
   .remove-set-button svg {
     width: 14px;
     height: 14px;
+  }
+
+  .popup-visibility {
+    margin-top: 0.5rem;
+  }
+  .popup-visibility label {
+    font-size: 0.95rem;
+    color: #222;
+  }
+  .popup-visibility input[type="checkbox"] {
+    margin-right: 0.5rem;
   }
 
   .complete-exercise-button {

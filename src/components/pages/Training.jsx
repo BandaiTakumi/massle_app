@@ -294,6 +294,8 @@ function Training() {
   return (
     <div className="training-page">
       <RestTimer />
+      {/* ポップアップの表示/非表示を切り替えるチェックボックス */}
+      <PopupVisibility />
       <div className="training-exercises">
         {exercises.map((exercise) => (
           <div key={exercise.id} className="training-exercise-block">
@@ -396,6 +398,59 @@ function Training() {
       >
         すべてのトレーニングを完了
       </button>
+    </div>
+  )
+}
+
+function PopupVisibility() {
+  const STORAGE_KEY = 'REST_TIMER_STATE'
+  const [visible, setVisible] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      const obj = raw ? JSON.parse(raw) : {}
+      return !obj?.popupHidden
+    } catch {
+      return true
+    }
+  })
+
+  useEffect(() => {
+    function onStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY)
+        const obj = raw ? JSON.parse(raw) : {}
+        setVisible(!obj?.popupHidden)
+      } catch {
+        // ignore
+      }
+    }
+    window.addEventListener('storage', onStorage)
+    window.addEventListener('rest_timer_change', onStorage)
+    return () => {
+      window.removeEventListener('storage', onStorage)
+      window.removeEventListener('rest_timer_change', onStorage)
+    }
+  }, [])
+
+  const onChange = (e) => {
+    const v = !!e.target.checked
+    setVisible(v)
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      const obj = raw ? JSON.parse(raw) : {}
+      const next = { ...obj, popupHidden: !v }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      window.dispatchEvent(new Event('rest_timer_change'))
+    } catch (err) {
+      console.warn('save popup visibility failed', err)
+    }
+  }
+
+  return (
+    <div className="popup-visibility">
+      <label>
+        <input type="checkbox" checked={visible} onChange={onChange} />タイマーのポップアップを表示する
+      </label>
     </div>
   )
 }

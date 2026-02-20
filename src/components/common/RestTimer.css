@@ -2,7 +2,6 @@
   background: #fff;
   border-radius: 8px;
   padding: 0.75rem;
-  margin-bottom: 1rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.06);
   color: #000;
 }
@@ -111,8 +110,8 @@
 /* popup small */
 .rest-timer-popup {
   position: fixed;
-  left: auto;
-  top: 12px;
+  left: var(--rest-popup-left, auto);
+  top: var(--rest-popup-top, 12px);
   background: #fff;
   color: #000;
   border-radius: 10px;
@@ -126,6 +125,10 @@
   width: 80px;
   height: 80px;
   touch-action: none;
+}
+
+.meter {
+  background: linear-gradient(270deg, #e6e6e6 var(--rest-meter-percent, 0%), #28a745 var(--rest-meter-percent, 0%));
 }
 .time-display {
   position: relative;
@@ -167,6 +170,18 @@
   color: #000;
   cursor: pointer;
   font-size: 0.95rem;
+  padding: 0;
+}
+
+.popup-hide {
+  position: absolute;
+  top: 6px;
+  right: 30px;
+  border: none;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  font-size: 0.9rem;
   padding: 0;
 }
 
