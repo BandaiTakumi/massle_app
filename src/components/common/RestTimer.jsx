@@ -327,11 +327,7 @@ export default function RestTimer({ compact = false }) {
         <div className="popup-icon">{icon}</div>
         <div className="popup-time">{formatTime(storedTotal)}</div>
         <div className="popup-total">/{formatTime(startTotalSec)}</div>
-        <button className="popup-hide" onClick={(e) => { e.stopPropagation(); handleHidePopup(e) }} title="非表示">_</button>
-        <button className="popup-close" onClick={(e) => {
-          e.stopPropagation()
-          stop()
-        }}>✖</button>
+        <button className="popup-hide" onClick={(e) => { e.stopPropagation(); handleHidePopup(e) }} title="非表示">✖</button>
       </div>
     )
   }
