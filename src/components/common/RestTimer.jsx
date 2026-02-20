@@ -222,7 +222,20 @@ export default function RestTimer({ compact = false }) {
   }
 
   const handleConfirm = () => {
-    start()
+    // prepare timer but don't start running immediately — enter paused state
+    const min = Math.max(0, parseInt(minutes || '0', 10))
+    const sec = Math.max(0, parseInt(seconds || '0', 10))
+    const tot = min * 60 + sec
+    if (tot <= 0) return
+    setTotal(tot)
+    setRemaining(tot)
+    setRunning(false)
+    setPaused(true)
+    setClosed(false)
+    writeStateToStorage({ minutes: min, seconds: sec, running: false, paused: true, remaining: tot, total: tot, closed: false })
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new Event('rest_timer_change'))
+    }
   }
 
   const percent = total ? Math.max(0, Math.min(100, Math.round(((total - (remaining ?? total)) / total) * 100))) : 0
